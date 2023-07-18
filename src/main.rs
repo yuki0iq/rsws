@@ -1,3 +1,4 @@
+use rsws::ThreadPool;
 use std::{
     fs,
     io::{prelude::*, BufReader},
@@ -5,7 +6,6 @@ use std::{
     thread,
     time::Duration,
 };
-use rsws::ThreadPool;
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
@@ -13,7 +13,7 @@ fn main() {
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
-        
+
         pool.execute(|| handle_connection(stream));
     }
 }
@@ -27,7 +27,7 @@ fn handle_connection(mut stream: TcpStream) {
         "GET /sleep HTTP/1.1" => {
             thread::sleep(Duration::from_secs(5));
             ("HTTP/1.1 200 OK", "ok.html")
-        },
+        }
         _ => ("HTTP/1.1 404 Not Found", "fail.html"),
     };
 
